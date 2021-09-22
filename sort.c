@@ -9,12 +9,10 @@ int isSorted;
 
 void secuencial(int arr[], int n)
 {
-    isSorted = 0; // Initially array is unsorted
-  
+    isSorted = 0;
     while (!isSorted) {
         isSorted = 1;
   
-        // Perform Bubble sort on odd indexed element
         for (int i = 1; i <= n - 2; i = i + 2) {
             if (arr[i] > arr[i + 1]) {
               int temp;
@@ -24,8 +22,7 @@ void secuencial(int arr[], int n)
                 isSorted = 0;
             }
         }
-  
-        // Perform Bubble sort on even indexed element
+
         for (int i = 0; i <= n - 2; i = i + 2) {
             if (arr[i] > arr[i + 1]) {
                int temp;
@@ -40,7 +37,7 @@ void secuencial(int arr[], int n)
     return;
 }
 
-/* initialize the data to random values based on rank (so they're different) */
+
 void init(int* data, int rank) {
   int i;
   srand(rank);
@@ -49,7 +46,7 @@ void init(int* data, int rank) {
   }
 }
 
-/* print the data to the screen */
+
 void print(int* data, int rank) {
   int i;
   printf("Process %d: ");
@@ -59,7 +56,7 @@ void print(int* data, int rank) {
   printf("\n");
 }
 
-/* comparison function for qsort */
+
 int cmp(const void* ap, const void* bp) {
   int a = * ((const int*) ap);
   int b = * ((const int*) bp);
@@ -73,7 +70,6 @@ int cmp(const void* ap, const void* bp) {
   }
 }
 
-/* find the index of the largest item in an array */
 int max_index(int* data) {
   int i, max = data[0], maxi = 0;
 
@@ -86,7 +82,7 @@ int max_index(int* data) {
   return maxi;
 }
 
-/* find the index of the smallest item in an array */
+
 int min_index(int* data) {
   int i, min = data[0], mini = 0;
 
@@ -100,7 +96,6 @@ int min_index(int* data) {
 }
 
 
-/* do the parallel odd/even sort */
 void parallel_sort(int* data, int rank, int size) {
   int i;
   int other[N];
@@ -152,7 +147,7 @@ void parallel_sort(int* data, int rank, int size) {
           other[maxi] = data[mini];
           data[mini] = temp;
         } else {
-          /* else stop because the largest are now in data */
+         
           break;
         }
       }
@@ -160,37 +155,37 @@ void parallel_sort(int* data, int rank, int size) {
   }
 }
 int main() {
-  /* our rank and size */
+
   int rank, size;
 
   double start,finish;
   double start1,finish1;
-  /* our processes data */
+
   int data[N];
 
-  /* initialize MPI */
+
   MPI_Init(NULL,NULL);
 
-  /* get the rank (process id) and size (number of processes) */
+
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-  /* initialize the data */
+
   init(data, rank);
 
   start = MPI_Wtime();
   parallel_sort(data, rank, size);
   finish = MPI_Wtime();
-//   print(data, rank);
-  printf(" Elapsed time = %e seconds\n", finish-start);
+
+  printf("time paralelo = %e seconds\n", finish-start);
 
 
 
   start1 = MPI_Wtime();
   secuencial(data, size);
   finish1 = MPI_Wtime();
-  printf("SECUENCIAL = %e seconds\n", finish1-start1);
-  /* quit MPI */
+  printf("time secuencial = %e seconds\n", finish1-start1);
+  
   MPI_Finalize( );
   return 0;
 }
